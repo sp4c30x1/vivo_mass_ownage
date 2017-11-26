@@ -1,4 +1,4 @@
-# vivo mass ownage ! 
+# Vivo Mass Ownage  
 
 ##### A script that uses shodan to get the user:pass for exposed vulnerable routers on the fly x)
 ##### ~~OBS:~~ This tools is for educational purpose :p
