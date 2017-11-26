@@ -4,7 +4,7 @@ obs: This tools is for educational purpose :p
 
 1. **install the shodan gem ! $ gem install shodan**
 2. **ruby vivo_exploit.rb -k <your_shodan_key> -s "org:'vivo' /wizard"**
-3. ~~be happy :p
+3. ~~be happy :p~~
 
 
 #
